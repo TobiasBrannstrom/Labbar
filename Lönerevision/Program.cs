@@ -10,45 +10,35 @@ namespace Lönerevision
     {
         static private void Main(string[] args)
         {
-        
-            while (true)
+            do
             {
-                try
-                {
-                    // Anropa funktionen ReadInt
-                    int count = ReadInt("Ange antal löner att mata in: "); 
+                // Anropa funktionen ReadInt
+                int count = ReadInt("Ange antal löner att mata in: ");
 
-                    // Om count är större än 2, kör ProcessSalaries och skicka med värdet i count
-                    if (count < 2)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        throw new Exception();
-                    }
+                // Om count är större än eller lika med 2, kör ProcessSalaries och skicka med värdet i count
+                if (count >= 2)
+                {
                     ProcessSalaries(count);
                 }
-                               
-                catch
+
+                else
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine("Du måste ange minst 2 löner för att göra en beräkning.");
                     Console.ResetColor();
                 }
-                  
+
                 // Fråga om användaren vill göra en ny beräkning eller avsluta programmet
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("\n\nTryck på valfri tangent för en ny beräkning. Esc avslutar programmet.\n");
                 Console.ResetColor();
-
-                if(Console.ReadKey(true).Key == ConsoleKey.Escape)
-                {
-                    return;
-                }
             }
-            
+            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+
         }
+
         static private int ReadInt(string prompt)
         {
             // Hantera användarens input
@@ -76,57 +66,60 @@ namespace Lönerevision
             
         static private void ProcessSalaries(int count)
         {
+            
             // Skapa en array med antal nummer som ligger i countvariabeln
-            int[] antalLoner = new int[count];
+            int[] loner = new int[count];
 
             Console.WriteLine("");
 
             // Inmatning av löner
-            for (int i = 0; i < antalLoner.Length; i++)
+            for (int i = 0; i < loner.Length; i++)
             {
-                antalLoner[i] = ReadInt(string.Format("Ange lön nummer {0}: ", i + 1));
-
+                loner[i] = ReadInt(string.Format("Ange lön nummer {0}: ", i + 1));
             }
-            Console.WriteLine("");
-            Console.WriteLine("------------------------------------");
 
             // Skapa en klon av arrayen och sortera den så att medianen kan räknas ut
-            int[] antalLonerKlon = (int[])antalLoner.Clone();
+            int[] lonerKlon = (int[])loner.Clone();
 
-            Array.Sort(antalLonerKlon);
+            Array.Sort(lonerKlon);
 
-            // Räkna ut medianen om antalet löner är heltal
-            if (count % 2 == 0)
+            // Uträkning av medianlön, medellön och lönespridning
+            
+            double medelLon = lonerKlon.Average(); // Uträkning av medellön
+            int loneSpridning = lonerKlon.Max() - lonerKlon.Min(); // Uträkning av lönespridningen
+
+            double median = 0;
+            if (count % 2 == 0) // Uträkning av medianen om antalet löner är heltal
             {
-                int mediantal1 = antalLonerKlon[antalLonerKlon.Length / 2 - 1];
-                int mediantal2 = antalLonerKlon[antalLonerKlon.Length / 2];
-                Console.WriteLine("Medianlön: {0, 25:C0}", (mediantal1 + mediantal2) / 2);
+                double mediantal1 = lonerKlon[(count / 2) - 1];
+                double mediantal2 = lonerKlon[(count / 2)];
+                median = (mediantal1 + mediantal2) / 2;
             }
-            // Räkna ut medianen om antalet löner är ett udda tal
-            else
+            
+            else // Uträkning av medianen om antalet löner är ett udda tal
             {
-                int median = antalLonerKlon[antalLonerKlon.Length / 2];
-                Console.WriteLine("Medianlön: {0, 25:C0}", median);
+                int uddaLoner = lonerKlon[lonerKlon.Length / 2];
+                median = uddaLoner;
             }
-            // Räkna ut medellön och lönespridning
-            Console.WriteLine("Medellön: {0, 26:C0}", antalLonerKlon.Average());
-            Console.WriteLine("Lönespridning: {0, 21:C0}", antalLonerKlon.Max() - antalLonerKlon.Min());
+            
+            // Utskrifter      
+            Console.WriteLine("");
             Console.WriteLine("------------------------------------");
-
-            // Skriv ut de inmatade lönerna i en lista
+            Console.WriteLine("Medianlön: {0, 25:C1}", median); // Median
+            Console.WriteLine("Medellön: {0, 26:C1}", medelLon); // Medellön
+            Console.WriteLine("Lönespridning: {0, 21:C1}", loneSpridning); // Lönespridning
+            Console.WriteLine("------------------------------------");
+            
+            // Skriv ut de inmatade lönerna i en lista, osorterade
             for (int i = 0; i < count; i++)
             {
                 if (i % 3 == 0)
                 {
                     Console.WriteLine("");
                 }
-
-                Console.Write("{0, 6}", antalLoner[i]);
-
+                Console.Write("{0, 6}", loner[i]);
             }
-        }               
-                                
-            
+        }                                                           
      }
 }
 
