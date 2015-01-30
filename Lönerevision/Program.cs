@@ -46,11 +46,22 @@ namespace Lönerevision
             {
                 Console.Write(prompt);
                 string antal = Console.ReadLine();
-                    
+                
+               
                 try
                 {
                     int amount = int.Parse(antal);
-                    return amount;
+                    if (amount > 0)
+                    {
+                        return amount;
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("Du måste ange ett heltal!");
+                        Console.ResetColor();
+                    }                                     
                 }
 
                 // Om det inte är ett tal eller heltal
@@ -73,32 +84,34 @@ namespace Lönerevision
             Console.WriteLine("");
 
             // Inmatning av löner
+            
             for (int i = 0; i < loner.Length; i++)
-            {
+            {             
                 loner[i] = ReadInt(string.Format("Ange lön nummer {0}: ", i + 1));
             }
 
-            // Skapa en klon av arrayen och sortera den så att medianen kan räknas ut
-            int[] lonerKlon = (int[])loner.Clone();
+            // Skapa en kopia av arrayen och sortera den så att medianen kan räknas ut (ändrat från clone)
+            int[] lonerKopia = new int[count];
+            Array.Copy(loner, lonerKopia, count);
 
-            Array.Sort(lonerKlon);
+            Array.Sort(lonerKopia);
 
             // Uträkning av medianlön, medellön och lönespridning
-            
-            double medelLon = lonerKlon.Average(); // Uträkning av medellön
-            int loneSpridning = lonerKlon.Max() - lonerKlon.Min(); // Uträkning av lönespridningen
+
+            double medelLon = lonerKopia.Average(); // Uträkning av medellön
+            int loneSpridning = lonerKopia.Max() - lonerKopia.Min(); // Uträkning av lönespridningen
 
             double median = 0;
             if (count % 2 == 0) // Uträkning av medianen om antalet löner är heltal
             {
-                double mediantal1 = lonerKlon[(count / 2) - 1];
-                double mediantal2 = lonerKlon[(count / 2)];
-                median = (mediantal1 + mediantal2) / 2;
+                int mediantal1 = lonerKopia[(count / 2) - 1];
+                int mediantal2 = lonerKopia[(count / 2)];
+                median = (mediantal1 + mediantal2) / 2.0;
             }
             
             else // Uträkning av medianen om antalet löner är ett udda tal
             {
-                int uddaLoner = lonerKlon[lonerKlon.Length / 2];
+                int uddaLoner = lonerKopia[lonerKopia.Length / 2];
                 median = uddaLoner;
             }
             
