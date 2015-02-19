@@ -25,6 +25,7 @@ namespace Kylskåp
                 {
                     throw new ArgumentException();                   
                 }
+        
                 _insideTemperature = value;
             }
         }
@@ -44,6 +45,7 @@ namespace Kylskåp
                 {
                     throw new ArgumentException();
                 }
+                
                 _targetTemperature = value;
             }
 
@@ -71,44 +73,38 @@ namespace Kylskåp
             // På med stängd dörr
             if (IsOn == true && DoorIsOpen == false)
             {
-                _insideTemperature -= 0.2m;
-
-                if (_insideTemperature <= 4)
-                {
-                    _insideTemperature = 4m;
-                } //  detta känns klumpigt men det ger rätt utskrivning
+                InsideTemperature -= 0.2m;
             }
 
             // På med öppen dörr
             else if (IsOn == true && DoorIsOpen == true)
             {
-                _insideTemperature += 0.2m;
-                if (_insideTemperature >= OutsideTemperature)
-                {
-                    _insideTemperature = OutsideTemperature;
-                }
+                InsideTemperature += 0.2m;
             }
 
             // Av med öppen dörr
             else if (IsOn == false && DoorIsOpen == true)
             {
-                _insideTemperature += 0.5m;
-                if (_insideTemperature >= OutsideTemperature)
-                {
-                    _insideTemperature = OutsideTemperature;
-                } // detta känns klumpigt men det ger rätt utskrivning
+                InsideTemperature += 0.5m;
             }
 
             // Av med stängd dörr
             else if (IsOn == false && DoorIsOpen == false)
             {
-                _insideTemperature += 0.1m;
-                if (_insideTemperature >= OutsideTemperature)
-                {
-                    _insideTemperature = OutsideTemperature;
-                }
+                InsideTemperature += 0.1m;
+
             }
-          
+
+            // Ny lösning för att InsideTemperature inte ska kunna hamna utanför Target och Outside temperature
+            if (InsideTemperature < TargetTemperature)
+            {
+                InsideTemperature = TargetTemperature;
+            }
+            else if (InsideTemperature > OutsideTemperature)
+            {
+                InsideTemperature = OutsideTemperature;
+            } 
+           
         }
 
         public override string ToString()
@@ -118,8 +114,8 @@ namespace Kylskåp
 
             return String.Format("[{0}] : {1:F1}°C : ({2:F1}°C) - {3}",
             on,
-            _insideTemperature,
-            _targetTemperature,
+            InsideTemperature,
+            TargetTemperature,
             open
             );
         }
