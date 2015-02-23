@@ -16,7 +16,7 @@ namespace Solida_Volymer
                 Console.Clear();
                 ViewMenu();
 
-                try
+                try // La dit denna för att programmet inte skulle smälla om man inte skriver in siffror
                 {
                     string menuChoice = Console.ReadLine();
                     int menuNumber = Convert.ToInt32(menuChoice);
@@ -128,7 +128,7 @@ namespace Solida_Volymer
                     {
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine("FEL! Ange ett flyttal större än 0");
+                        Console.WriteLine("FEL! Ange ett flyttal större än 0.");
                         Console.ResetColor();
                     }
                 }
@@ -136,7 +136,7 @@ namespace Solida_Volymer
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine("FEL! Ange ett flyttal större än 0");
+                    Console.WriteLine("FEL! Ange ett flyttal större än 0.");
                     Console.ResetColor();
                 }
             }
